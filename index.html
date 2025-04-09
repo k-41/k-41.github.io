@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>k-41's Writeups</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="profile-section">
+                <div class="profile-img-container">
+                    <img src="pfp.png" alt="Profile Picture" class="profile-img">
+                    <div class="profile-glow"></div>
+                </div>
+                <h1 class="title">👾 Welcome to k-41's page 👾</h1>
+            </div>
+        </header>
+        
+        <main>
+            <div class="categories-container">
+                <h2>Writeup Categories</h2>
+                <div class="category-grid">
+                    <!-- Example folders that you can modify later -->
+                    <div class="category-folder">
+                        <i class="fas fa-folder"></i>
+                        <span>Web Exploitation</span>
+                    </div>
+                    <div class="category-folder">
+                        <i class="fas fa-folder"></i>
+                        <span>Cryptography</span>
+                    </div>
+                    <div class="category-folder">
+                        <i class="fas fa-folder"></i>
+                        <span>Forensics</span>
+                    </div>
+                    <div class="category-folder">
+                        <i class="fas fa-folder"></i>
+                        <span>Reverse Engineering</span>
+                    </div>
+                    <div class="category-folder">
+                        <i class="fas fa-folder"></i>
+                        <span>Binary Exploitation</span>
+                    </div>
+                    <div class="category-folder">
+                        <i class="fas fa-folder"></i>
+                        <span>Miscellaneous</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <div class="terminal">
+                <div class="terminal-header">
+                    <div class="terminal-buttons">
+                        <span class="terminal-btn close"></span>
+                        <span class="terminal-btn minimize"></span>
+                        <span class="terminal-btn maximize"></span>
+                    </div>
+                    <div class="terminal-title">k-41@terminal:~</div>
+                </div>
+                <div class="terminal-body">
+                    <div class="line">k-41@terminal:~$ <span class="typing-text">cat welcome.txt</span></div>
+                    <div class="line">Welcome to my collection of cybersecurity writeups!</div>
+                    <div class="line">Feel free to explore the categories above.</div>
+                    <div class="line">k-41@terminal:~$ <span class="cursor">|</span></div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div class="background-effects">
+        <div class="matrix-effect" id="matrix"></div>
+    </div>
+
+    <script>
+        // Matrix rain effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('matrix');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+            const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const nums = '0123456789';
+            
+            const alphabet = katakana + latin + nums;
+            
+            const fontSize = 16;
+            const columns = canvas.width/fontSize;
+            
+            const rainDrops = [];
+            
+            for(let x = 0; x < columns; x++) {
+                rainDrops[x] = 1;
+            }
+            
+            const draw = () => {
+                ctx.fillStyle = 'rgba(105, 105, 105, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#0F0';
+                ctx.font = fontSize + 'px monospace';
+                
+                for(let i = 0; i < rainDrops.length; i++) {
+                    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                    ctx.fillText(text, i*fontSize, rainDrops[i]*fontSize);
+                    
+                    if(rainDrops[i]*fontSize > canvas.height && Math.random() > 0.975) {
+                        rainDrops[i] = 0;
+                    }
+                    rainDrops[i]++;
+                }
+            };
+            
+            setInterval(draw, 30);
+            
+            // Resize canvas on window resize
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        });
+    </script>
+</body>
+</html>
