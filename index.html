@@ -120,9 +120,22 @@
                 </div>
             </section>
 
+            <div class="interactive-log" id="interactiveLog" aria-live="polite"></div>
             <p class="prompt-line prompt-final" id="promptFinal">
                 <span class="prompt-user">k-41@ctf</span><span class="prompt-colon">:</span><span class="prompt-path">~</span><span class="prompt-sign">$</span>
-                <span class="type-cursor" id="cursorFinal">&#9608;</span>
+                <span class="input-wrap">
+                    <input
+                        type="text"
+                        id="termInput"
+                        class="term-input"
+                        autocomplete="off"
+                        autocapitalize="off"
+                        autocorrect="off"
+                        spellcheck="false"
+                        aria-label="Type a command. This is a static site, not a real shell — try it anyway."
+                    >
+                    <span class="type-cursor" id="cursorFinal">&#9608;</span>
+                </span>
             </p>
         </div>
     </main>

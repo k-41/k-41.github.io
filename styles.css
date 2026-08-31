@@ -17,6 +17,7 @@
     --accent: #F2A93C;
     --accent-dim: #B9812E;
     --dir-blue: #5EA1F2;
+    --warn: #E2695F;
     --glow: rgba(242, 169, 60, 0.25);
 
     --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -69,8 +70,18 @@ body {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 8px;
-    box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.7), 0 0 0 rgba(242, 169, 60, 0);
     overflow: hidden;
+    animation: breathe 6s ease-in-out infinite;
+}
+
+@keyframes breathe {
+    0%, 100% { box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.7), 0 0 0 rgba(242, 169, 60, 0); }
+    50%      { box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.7), 0 0 42px rgba(242, 169, 60, 0.10); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .window { animation: none; }
 }
 
 .titlebar {
@@ -225,11 +236,32 @@ body {
     grid-template-columns: 100px 92px 52px 62px 1fr;
     align-items: center;
     gap: 10px;
-    padding: 9px 10px;
+    padding: 9px 10px 9px 14px;
     margin: 0 -10px;
     border-radius: var(--radius);
     text-decoration: none;
     color: inherit;
+    position: relative;
+    transition: background 0.15s ease;
+}
+
+.ls-link::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 7px;
+    bottom: 7px;
+    width: 2px;
+    background: var(--accent);
+    border-radius: 1px;
+    transform: scaleY(0);
+    transform-origin: center;
+    transition: transform 0.18s ease;
+}
+
+.ls-link:hover::before,
+.ls-link:focus-visible::before {
+    transform: scaleY(1);
 }
 
 .ls-link:hover,
@@ -272,6 +304,64 @@ body {
 .cat-out { padding-top: 4px; }
 .cat-out p { margin: 0 0 6px; color: var(--text); }
 .cat-out p:last-child { margin-bottom: 0; color: var(--muted); }
+
+/* ---------- interactive prompt ---------- */
+
+.interactive-log {
+    max-height: 220px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+}
+
+.interactive-log:empty { display: none; }
+
+.interactive-log .prompt-line {
+    margin: 0 0 2px;
+}
+
+.resp-line {
+    margin: 0 0 14px;
+    padding-left: 3px;
+    color: var(--warn);
+    font-size: 14px;
+}
+
+.prompt-final {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.input-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+}
+
+.term-input {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 15px;
+    caret-color: var(--accent);
+}
+
+.prompt-final .type-cursor {
+    margin-left: 1px;
+}
+
+.prompt-final.focused .type-cursor {
+    display: none;
+}
 
 /* ---------- boot sequence ---------- */
 
