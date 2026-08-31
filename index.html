@@ -4,128 +4,129 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>k-41's Writeups</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="profile-section">
-                <div class="profile-img-container">
-                    <img src="pfp.jpg" alt="Profile Picture" class="profile-img">
-                    <div class="profile-glow"></div>
-                </div>
-                <h1 class="title">👾 Welcome to k-41's page 👾</h1>
-            </div>
-        </header>
-        
-        <main>
-            <div class="categories-container">
-                <h2>Writeup Categories</h2>
-                <div class="category-grid">
-                    <!-- Example folders that you can modify later -->
-                    <div class="category-folder">
-                        <i class="fas fa-folder"></i>
-                        <span>Web Exploitation</span>
-                    </div>
-                    <div class="category-folder">
-                        <i class="fas fa-folder"></i>
-                        <span>Cryptography</span>
-                    </div>
-                    <div class="category-folder">
-                        <i class="fas fa-folder"></i>
-                        <span>Forensics</span>
-                    </div>
-                    <div class="category-folder">
-                        <i class="fas fa-folder"></i>
-                        <span>Reverse Engineering</span>
-                    </div>
-                    <div class="category-folder">
-                        <i class="fas fa-folder"></i>
-                        <span>Binary Exploitation</span>
-                    </div>
-                    <div class="category-folder">
-                        <i class="fas fa-folder"></i>
-                        <span>Miscellaneous</span>
-                    </div>
-                </div>
-            </div>
-        </main>
-        
-        <footer>
-            <div class="terminal">
-                <div class="terminal-header">
-                    <div class="terminal-buttons">
-                        <span class="terminal-btn close"></span>
-                        <span class="terminal-btn minimize"></span>
-                        <span class="terminal-btn maximize"></span>
-                    </div>
-                    <div class="terminal-title">k-41@terminal:~</div>
-                </div>
-                <div class="terminal-body">
-                    <div class="line">k-41@terminal:~$ <span class="typing-text">cat welcome.txt</span></div>
-                    <div class="line">Welcome to my collection of cybersecurity writeups!</div>
-                    <div class="line">Feel free to explore the categories above.</div>
-                    <div class="line">k-41@terminal:~$ <span class="cursor">|</span></div>
-                </div>
-            </div>
-        </footer>
-    </div>
+    <div class="crt-overlay" aria-hidden="true"></div>
 
-    <div class="background-effects">
-        <div class="matrix-effect" id="matrix"></div>
-    </div>
+    <main class="window" role="main">
+        <div class="titlebar">
+            <div class="dots" aria-hidden="true">
+                <span class="dot dot-close"></span>
+                <span class="dot dot-min"></span>
+                <span class="dot dot-max"></span>
+            </div>
+            <span class="titlebar-path">k-41@ctf<span class="titlebar-sep">:</span>~</span>
+            <span class="titlebar-spacer" aria-hidden="true"></span>
+        </div>
 
-    <script>
-        // Matrix rain effect
-        document.addEventListener('DOMContentLoaded', function() {
-            const canvas = document.getElementById('matrix');
-            const ctx = canvas.getContext('2d');
-            
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            
-            const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
-            const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            const nums = '0123456789';
-            
-            const alphabet = katakana + latin + nums;
-            
-            const fontSize = 16;
-            const columns = canvas.width/fontSize;
-            
-            const rainDrops = [];
-            
-            for(let x = 0; x < columns; x++) {
-                rainDrops[x] = 1;
-            }
-            
-            const draw = () => {
-                ctx.fillStyle = 'rgba(105, 105, 105, 0.05)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                ctx.fillStyle = '#0F0';
-                ctx.font = fontSize + 'px monospace';
-                
-                for(let i = 0; i < rainDrops.length; i++) {
-                    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                    ctx.fillText(text, i*fontSize, rainDrops[i]*fontSize);
-                    
-                    if(rainDrops[i]*fontSize > canvas.height && Math.random() > 0.975) {
-                        rainDrops[i] = 0;
-                    }
-                    rainDrops[i]++;
-                }
-            };
-            
-            setInterval(draw, 30);
-            
-            // Resize canvas on window resize
-            window.addEventListener('resize', () => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            });
-        });
-    </script>
+        <div class="term-body" id="termBody">
+
+            <section class="block" id="blockWhoami">
+                <p class="prompt-line">
+                    <span class="prompt-user">k-41@ctf</span><span class="prompt-colon">:</span><span class="prompt-path">~</span><span class="prompt-sign">$</span>
+                    <span class="cmd" id="cmdWhoami"></span><span class="type-cursor" id="cursorWhoami">&#9608;</span>
+                </p>
+                <div class="whoami-out out" id="outWhoami">
+                    <div class="avatar-frame">
+                        <img src="pfp.jpg" alt="k-41" class="avatar-img" id="avatarImg" onerror="this.style.display='none'">
+                        <i class="avatar-fallback fa-solid fa-user-secret" aria-hidden="true"></i>
+                    </div>
+                    <div class="whoami-text">
+                        <p class="handle">k-41</p>
+                        <p class="tagline">CTF player. Writeups on web exploitation, cryptography, forensics, reversing, and pwn.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="block" id="blockLs">
+                <p class="prompt-line">
+                    <span class="prompt-user">k-41@ctf</span><span class="prompt-colon">:</span><span class="prompt-path">~</span><span class="prompt-sign">$</span>
+                    <span class="cmd" id="cmdLs"></span><span class="type-cursor" id="cursorLs">&#9608;</span>
+                </p>
+                <div class="ls-out out" id="outLs">
+                    <p class="ls-total">total 6</p>
+                    <ul class="ls-list" role="list">
+                        <li class="ls-row">
+                            <a href="web-exploitation.html" class="ls-link">
+                                <span class="ls-perms">drwxr-xr-x</span>
+                                <span class="ls-owner">k-41 k-41</span>
+                                <span class="ls-size">4.0K</span>
+                                <span class="ls-date">Aug 31</span>
+                                <span class="ls-name"><i class="fa-solid fa-folder" aria-hidden="true"></i>web-exploitation/</span>
+                            </a>
+                        </li>
+                        <li class="ls-row">
+                            <a href="cryptography.html" class="ls-link">
+                                <span class="ls-perms">drwxr-xr-x</span>
+                                <span class="ls-owner">k-41 k-41</span>
+                                <span class="ls-size">4.0K</span>
+                                <span class="ls-date">Aug 31</span>
+                                <span class="ls-name"><i class="fa-solid fa-folder" aria-hidden="true"></i>cryptography/</span>
+                            </a>
+                        </li>
+                        <li class="ls-row">
+                            <a href="forensics.html" class="ls-link">
+                                <span class="ls-perms">drwxr-xr-x</span>
+                                <span class="ls-owner">k-41 k-41</span>
+                                <span class="ls-size">4.0K</span>
+                                <span class="ls-date">Aug 31</span>
+                                <span class="ls-name"><i class="fa-solid fa-folder" aria-hidden="true"></i>forensics/</span>
+                            </a>
+                        </li>
+                        <li class="ls-row">
+                            <a href="reverse-engineering.html" class="ls-link">
+                                <span class="ls-perms">drwxr-xr-x</span>
+                                <span class="ls-owner">k-41 k-41</span>
+                                <span class="ls-size">4.0K</span>
+                                <span class="ls-date">Aug 31</span>
+                                <span class="ls-name"><i class="fa-solid fa-folder" aria-hidden="true"></i>reverse-engineering/</span>
+                            </a>
+                        </li>
+                        <li class="ls-row">
+                            <a href="binary-exploitation.html" class="ls-link">
+                                <span class="ls-perms">drwxr-xr-x</span>
+                                <span class="ls-owner">k-41 k-41</span>
+                                <span class="ls-size">4.0K</span>
+                                <span class="ls-date">Aug 31</span>
+                                <span class="ls-name"><i class="fa-solid fa-folder" aria-hidden="true"></i>binary-exploitation/</span>
+                            </a>
+                        </li>
+                        <li class="ls-row">
+                            <a href="misc.html" class="ls-link">
+                                <span class="ls-perms">drwxr-xr-x</span>
+                                <span class="ls-owner">k-41 k-41</span>
+                                <span class="ls-size">4.0K</span>
+                                <span class="ls-date">Aug 31</span>
+                                <span class="ls-name"><i class="fa-solid fa-folder" aria-hidden="true"></i>misc/</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="block" id="blockCat">
+                <p class="prompt-line">
+                    <span class="prompt-user">k-41@ctf</span><span class="prompt-colon">:</span><span class="prompt-path">~</span><span class="prompt-sign">$</span>
+                    <span class="cmd" id="cmdCat"></span><span class="type-cursor" id="cursorCat">&#9608;</span>
+                </p>
+                <div class="cat-out out" id="outCat">
+                    <p>Welcome to my collection of CTF writeups.</p>
+                    <p>Pick a directory above to start reading.</p>
+                </div>
+            </section>
+
+            <p class="prompt-line prompt-final" id="promptFinal">
+                <span class="prompt-user">k-41@ctf</span><span class="prompt-colon">:</span><span class="prompt-path">~</span><span class="prompt-sign">$</span>
+                <span class="type-cursor" id="cursorFinal">&#9608;</span>
+            </p>
+        </div>
+    </main>
+
+    <script src="script.js" defer></script>
 </body>
 </html>
