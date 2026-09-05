@@ -3,24 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Network CTF Write-ups</title>
+    <title>Network Write-ups · k-41</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
-    <nav>
-        <a href="../index.html">Back to Home</a>
-    </nav>
+    <div class="crt-overlay" aria-hidden="true"></div>
 
-    <header>
-        <h1>Welcome to Network Challenges</h1>
-        <p>A collection of write-ups focusing on traffic analysis, routing, and network security.</p>
-    </header>
+    <main class="window" role="main">
+        <div class="titlebar">
+            <div class="dots" aria-hidden="true">
+                <span class="dot dot-close"></span>
+                <span class="dot dot-min"></span>
+                <span class="dot dot-max"></span>
+            </div>
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a href="../index.html">~</a>
+                <span class="crumb-sep">/</span>
+                <span class="crumb-current" aria-current="page">network</span>
+            </nav>
+        </div>
 
-    <main>
-        <h2>Available Write-ups</h2>
-        <ul>
-            <li><a href="./ftp-writeup.html">Challenge 1: PCAP Analysis</a></li>
-            <!-- Add more challenges here as you complete them -->
-        </ul>
+        <div class="term-body" id="termBody">
+
+            <section class="block">
+                <p class="prompt-line">
+                    <span class="prompt-user">k-41@ctf</span><span class="prompt-colon">:</span><span class="prompt-path">~/writeups/network</span><span class="prompt-sign">$</span>
+                    <span class="cmd" data-text="cat README.md"></span><span class="type-cursor">&#9608;</span>
+                </p>
+                <div class="out readme-out">
+                    <h1>Network Challenges</h1>
+                    <p class="tagline">A collection of write-ups focusing on traffic analysis, routing, and network security.</p>
+                </div>
+            </section>
+
+            <section class="block">
+                <p class="prompt-line">
+                    <span class="prompt-user">k-41@ctf</span><span class="prompt-colon">:</span><span class="prompt-path">~/writeups/network</span><span class="prompt-sign">$</span>
+                    <span class="cmd" data-text="ls -la ./"></span><span class="type-cursor">&#9608;</span>
+                </p>
+                <div class="out ls-out">
+                    <p class="ls-total">total 2</p>
+                    <ul class="ls-list" role="list">
+                        <li class="ls-row">
+                            <a href="./FTP/ftp-writeup.html" class="ls-link file-link">
+                                <span class="ls-row-top">
+                                    <span class="ls-perms">-rw-r--r--</span>
+                                    <span class="ls-owner">k-41 k-41</span>
+                                    <span class="ls-size">5.8K</span>
+                                    <span class="ls-date">Jun 12</span>
+                                    <span class="ls-name"><i class="fa-solid fa-file-lines" aria-hidden="true"></i>ftp-writeup.html</span>
+                                </span>
+                                <span class="ls-desc">Challenge 1 &middot; PCAP Analysis</span>
+                            </a>
+                        </li>
+                        <li class="ls-row">
+                            <a href="./APOP-POP/pop-apop.html" class="ls-link file-link">
+                                <span class="ls-row-top">
+                                    <span class="ls-perms">-rw-r--r--</span>
+                                    <span class="ls-owner">k-41 k-41</span>
+                                    <span class="ls-size">18K</span>
+                                    <span class="ls-date">Sep 04</span>
+                                    <span class="ls-name"><i class="fa-solid fa-file-lines" aria-hidden="true"></i>APOP-POP/pop-apop.html</span>
+                                </span>
+                                <span class="ls-desc">Challenge 2 &middot; POP - APOP <span class="badge badge-easy">Easy</span></span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <p class="prompt-line prompt-final">
+                <span class="prompt-user">k-41@ctf</span><span class="prompt-colon">:</span><span class="prompt-path">~/writeups/network</span><span class="prompt-sign">$</span>
+                <span class="type-cursor">&#9608;</span>
+            </p>
+        </div>
     </main>
+
+    <script src="../category.js" defer></script>
 </body>
 </html>

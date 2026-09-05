@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POP - APOP Write-up · k-41</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="crt-overlay" aria-hidden="true"></div>
+
+    <main class="window article-window" role="main">
+        <div class="titlebar">
+            <div class="dots" aria-hidden="true">
+                <span class="dot dot-close"></span>
+                <span class="dot dot-min"></span>
+                <span class="dot dot-max"></span>
+            </div>
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a href="../index.html">~</a>
+                <span class="crumb-sep">/</span>
+                <a href="index.html">network</a>
+                <span class="crumb-sep">/</span>
+                <span class="crumb-current" aria-current="page">POP - APOP</span>
+            </nav>
+        </div>
+
+        <div class="progress-track" aria-hidden="true">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <article class="term-article">
+            <header class="article-head">
+                <p class="cmd-line">
+                    <span class="prompt-user">k-41@ctf</span><span class="prompt-colon">:</span><span class="prompt-path">~/writeups/network</span><span class="prompt-sign">$</span>
+                    <span class="cmd">cat pop-apop.md</span>
+                </p>
+                <h1>Challenge 2: POP - APOP</h1>
+                <div class="meta-badges">
+                    <span class="badge badge-easy">Easy</span>
+                    <span class="badge badge-cat">Network</span>
+                </div>
+            </header>
+
+            <div class="callout">
+                <p class="callout-label">Disclaimer</p>
+                <p>This write-up is for educational purposes only. Out of respect to the <a href="https://www.root-me.org" target="_blank" rel="noopener">root-me</a> community and the challenge creators, I've redacted all revealed information, so you do the work yourself and learn a thing or two along the way.</p>
+            </div>
+
+            <section>
+                <h2>Objective</h2>
+                <p>This is a network CTF challenge from <a href="https://www.root-me.org/en/Challenges/Network/POP-APOP" target="_blank" rel="noopener">Root-Me APOP - POP challenge</a>. Given a PCAP file containing POP traffic, identify the APOP authentication method and extract the flag.</p>
+                <p>If the creators or an admin believes this write-up violates their intellectual property rights, they can contact me using the contact page to have it heavily redacted or removed.</p>
+            </section>
+
+            <section>
+                <h2>What is POP?</h2>
+                <p><strong>Post Office Protocol</strong> (POP) is a standard method that allows email applications (such as Outlook or Thunderbird) to download emails from a mail server to your computer. The most commonly used version is POP3, which is still widely supported today.</p>
+            </section>
+
+            <section>
+                <h2>POP Workflow</h2>
+                <p>POP3 works by connecting your email application to a mail server, authenticating your account, checking for available messages, and downloading those messages to your device.</p>
+
+                <ol class="step-list">
+                    <li>
+                        <span class="step-num" aria-hidden="true"></span>
+                        <div class="step-body">
+                            <h3>The email client identifies the POP server</h3>
+                            <p>Your email application is configured with a POP server address, such as <code>pop.example.com</code>.</p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <span class="step-num" aria-hidden="true"></span>
+                        <div class="step-body">
+                            <h3>The client connects to the server</h3>
+                            <p>The client opens a connection using one of the common POP3 ports:</p>
+                            <ul>
+                                <li><strong>Port 110</strong> — standard POP3</li>
+                                <li><strong>Port 995</strong> — POP3 using SSL/TLS encryption</li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li>
+                        <span class="step-num" aria-hidden="true"></span>
+                        <div class="step-body">
+                            <h3>A secure connection may be established</h3>
+                            <p>If SSL/TLS is enabled, the client and server create an encrypted connection. This helps protect login information and email content while it is being transferred.</p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <span class="step-num" aria-hidden="true"></span>
+                        <div class="step-body">
+                            <h3>The server sends a greeting</h3>
+                            <p>Once the connection has been established, the POP server tells the client that it is ready.</p>
+                            <pre><code>+OK POP3 server ready</code></pre>
+                        </div>
+                    </li>
+
+                    <li>
+                        <span class="step-num" aria-hidden="true"></span>
+                        <div class="step-body">
+                            <h3>The client authenticates the user</h3>
+                            <p>The email client provides the user's account information so the server can verify their identity.</p>
+                            <pre><code>USER john@example.com
+PASS password</code></pre>
+                            <p>Modern mail servers may use more secure authentication methods instead of transmitting a normal password directly.</p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <span class="step-num" aria-hidden="true"></span>
+                        <div class="step-body">
+                            <h3>The server verifies the account</h3>
+                            <p>If the login details are correct, the server gives the client access to the mailbox.</p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <span class="step-num" aria-hidden="true"></span>
+                        <div class="step-body">
+                            <h3>The client checks the mailbox</h3>
+                            <p>The client can use the <code>STAT</code> command to check how many messages are available.</p>
+                            <pre><code>STAT</code></pre>
+                            <p>The server may respond with:</p>
+                            <pre><code>+OK 5 24567</code></pre>
+                            <p>This means there are <strong>5 messages</strong> with a total size of <strong>24,567 bytes</strong>.</p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <span class="step-num" aria-hidden="true"></span>
+                        <div class="step-body">
+                            <h3>The client requests a list of messages</h3>
+                            <p>The <code>LIST</code> command can be used to display the available messages and their sizes.</p>
+                            <pre><code>LIST
+
++OK 5 messages
+1 4200
+2 5100
+3 3800
+4 6200
+5 5267</code></pre>
+                        </div>
+                    </li>
+
+                    <li>
+                        <span class="step-num" aria-hidden="true"></span>
+                        <div class="step-body">
+                            <h3>The client identifies previously downloaded emails</h3>
+                            <p>POP3 clients can use the <code>UIDL</code> command to obtain a unique identifier for each email.</p>
+                            <pre><code>UIDL
+
+1 A001
+2 A002
+3 A003</code></pre>
+                            <p>These identifiers help the email application avoid downloading the same message repeatedly.</p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <span class="step-num" aria-hidden="true"></span>
+                        <div class="step-body">
+                            <h3>The client downloads an email</h3>
+                            <p>To retrieve a message, the client sends the <code>RETR</code> command followed by the message number.</p>
+                            <pre><code>RETR 1</code></pre>
+                            <p>The server then sends the full email, including its headers, subject, body, sender information, and attachments.</p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <span class="step-num" aria-hidden="true"></span>
+                        <div class="step-body">
+                            <h3>The email is stored locally</h3>
+                            <p>Once downloaded, the email application stores the message on the user's computer or device.</p>
+                            <pre><code>Mail Server
+    &darr;
+   POP3
+    &darr;
+Email Client
+    &darr;
+Local Storage</code></pre>
+                        </div>
+                    </li>
+
+                    <li>
+                        <span class="step-num" aria-hidden="true"></span>
+                        <div class="step-body">
+                            <h3>Additional emails are downloaded</h3>
+                            <p>The client repeats the retrieval process for the remaining messages.</p>
+                            <pre><code>RETR 2
+RETR 3
+RETR 4
+RETR 5</code></pre>
+                        </div>
+                    </li>
+
+                    <li>
+                        <span class="step-num" aria-hidden="true"></span>
+                        <div class="step-body">
+                            <h3>Messages may be marked for deletion</h3>
+                            <p>POP3 can remove downloaded messages from the server using the <code>DELE</code> command.</p>
+                            <pre><code>DELE 1</code></pre>
+                            <p>However, many email applications include an option such as <strong>"Leave a copy of messages on the server"</strong>. If enabled, the messages remain on the server after being downloaded.</p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <span class="step-num" aria-hidden="true"></span>
+                        <div class="step-body">
+                            <h3>The client ends the session</h3>
+                            <p>When the client has finished, it sends the <code>QUIT</code> command.</p>
+                            <pre><code>QUIT</code></pre>
+                        </div>
+                    </li>
+
+                    <li>
+                        <span class="step-num" aria-hidden="true"></span>
+                        <div class="step-body">
+                            <h3>The server closes the connection</h3>
+                            <p>The server ends the POP3 session. Messages that were marked for deletion are normally removed at this stage.</p>
+                        </div>
+                    </li>
+                </ol>
+
+                <h3>Example POP3 Conversation</h3>
+                <pre><code>Client connects to pop.example.com
+
+Server: +OK POP3 server ready
+
+Client: USER john@example.com
+Server: +OK
+
+Client: PASS ********
+Server: +OK Mailbox ready
+
+Client: STAT
+Server: +OK 3 12000
+
+Client: LIST
+Server:
+1 4000
+2 3500
+3 4500
+
+Client: UIDL
+Server:
+1 A001
+2 A002
+3 A003
+
+Client: RETR 1
+Server: [email contents]
+
+Client: RETR 2
+Server: [email contents]
+
+Client: RETR 3
+Server: [email contents]
+
+Client: DELE 1
+Server: +OK
+
+Client: DELE 2
+Server: +OK
+
+Client: DELE 3
+Server: +OK
+
+Client: QUIT
+Server: +OK Goodbye</code></pre>
+            </section>
+
+            <section>
+                <h2>Methodology</h2>
+                <p>OK, so enough with the history class presented by yours truly, AI. From now on expect a more human way of talking :)</p>
+                <p>So one thing you should retain from the previous text is that POP uses either port 110 or 995 if SSL/TLS is enabled (hopefully not 🤞), and the password is sent in plaintext OR hashed using the APOP method. And since this is a CTF, it's most definitely going to be the latter.</p>
+                <p>Opening up the pcap file we can see a lot of packets, so we need to clean this up using a filter: <code>tcp.port == 110 or tcp.port == 995</code></p>
+
+                <figure class="shot">
+                    <img src="./challenge-2/Wireshark-Filter.png" alt="Filtered POP traffic in Wireshark" width="600" loading="lazy">
+                    <figcaption>Filtered POP traffic</figcaption>
+                </figure>
+
+                <p>Ok, so we cleaned things up and we can see that the port used here is 110, which is why we can read the greeting message and communication between the client and server in plaintext. Easy win — we just need to follow the stream!</p>
+
+                <figure class="shot">
+                    <img src="./challenge-2/FollowPOPStream.png" alt="Following the POP TCP stream" width="600" loading="lazy">
+                    <figcaption>Following the POP stream</figcaption>
+                </figure>
+
+                <p>Uh oh, looks like we found something, but most likely not the flag! Looks like an MD5 hash of the password... OK, so back to the drawing board — we need to explain what this is and how we can use it.</p>
+                <p>The <strong>APOP method</strong> is a challenge-response authentication mechanism that uses a shared secret (the password) and a unique challenge (the timestamp) to generate a digest. The server sends a unique timestamp to the client, which then appends it to the password and computes an MD5 hash. This hash is sent back to the server for verification.</p>
+
+                <div class="formula">
+                    <code>MD5(TIMESTAMP_CHALLENGE || PASSWORD)</code>
+                </div>
+
+                <p>Let's collect the pieces — we need the timestamp challenge, the hash, and a tool that will crack this hash.</p>
+                <p>Looking closer at the first Hello packet, we can see the timestamp challenge is <code>&lt;1755[REDACTED]5a72&gt;</code>, angle brackets included.</p>
+
+                <figure class="shot">
+                    <img src="./challenge-2/timestamp-challenge.png" alt="Hello packet containing the timestamp challenge" width="600" loading="lazy">
+                    <figcaption>Hello packet with the timestamp challenge</figcaption>
+                </figure>
+
+                <p>In the response packet, we can see the MD5 hash sent next to the username: <code>4ddd[REDACTED]17f0</code></p>
+
+                <figure class="shot">
+                    <img src="./challenge-2/hash.png" alt="Login response packet containing the MD5 hash" width="600" loading="lazy">
+                    <figcaption>Login response packet</figcaption>
+                </figure>
+
+                <p>So we have all the pieces, and with some luck we can crack this, using JohnTheRipper. The hash file compatible with JohnTheRipper should look like this:</p>
+                <pre><code>{user}:$dynamic_1017${hash}$HEX${salt}</code></pre>
+                <p>In our case:</p>
+                <pre><code>bsmith:$dynamic_1017$4ddd[REDACTED]17f0$HEX$3c31[REDACTED]323e</code></pre>
+
+                <p><strong>Alternatively</strong>, there's a John script called <a href="https://github.com/byt3n33dl3/PasswordCracker/blob/34df68a0a05a5012c36996af40d11a25b7567870/rules/converter/apop2john.py" target="_blank" rel="noopener">apop2john.py</a> that automatically extracts the hash and salt from the pcap file and generates a hash file compatible with JohnTheRipper.</p>
+
+                <figure class="shot">
+                    <img src="./challenge-2/apop2john.png" alt="apop2john.py extracting the hash and salt" width="600" loading="lazy">
+                    <figcaption>apop2john.py extracting the hash and salt</figcaption>
+                </figure>
+
+                <pre><code>john --wordlist=/usr/share/wordlists/rockyou.txt pop3_hash.txt</code></pre>
+
+                <figure class="shot">
+                    <img src="./challenge-2/cracked-password.png" alt="JohnTheRipper cracking the hash" width="600" loading="lazy">
+                    <figcaption>JohnTheRipper cracking the hash</figcaption>
+                </figure>
+
+                <p>And there we have it — the password is <code>REDACTED</code>. We can now go validate our challenge with it.</p>
+            </section>
+
+            <footer class="article-foot">
+                <p class="cmd-line">
+                    <span class="prompt-user">k-41@ctf</span><span class="prompt-colon">:</span><span class="prompt-path">~/writeups/network</span><span class="prompt-sign">$</span>
+                    <span class="type-cursor">&#9608;</span>
+                </p>
+                <nav class="foot-nav" aria-label="Write-up navigation">
+                    <a href="index.html">&larr; back to network/</a>
+                    <a href="../index.html">~ home</a>
+                </nav>
+            </footer>
+        </article>
+    </main>
+
+    <script src="../writeup.js" defer></script>
+</body>
+</html>
